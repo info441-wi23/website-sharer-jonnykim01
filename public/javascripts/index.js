@@ -6,21 +6,30 @@ function init(){
     loadPosts();
 }
 
+const escapeHTML = str => String(str).replace(/[&<>'"]/g, 
+    tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+    }[tag]));
+
 async function loadPosts(){
     document.getElementById("posts_box").innerText = "Loading...";
     let postsJson = await fetchJSON(`api/${apiVersion}/posts`)
 
     let postsHtml = postsJson.map(postInfo => {
-        return `<div class="post"><p>username: ${postInfo.username}</p><p>description: ${postInfo.description}</p>${postInfo.htmlPreview}</div>`
+        return `<div class="post"><p>username: ${escapeHTML(postInfo.username)}</p><p>description: ${escapeHTML(postInfo.description)}</p>${escapeHTML(postInfo.htmlPreview)}</div>`
     }).join("\n");
     document.getElementById("posts_box").innerHTML = postsHtml;
 }
 
 async function postUrl(){
     document.getElementById("postStatus").innerHTML = "sending data..."
-    let url = document.getElementById("urlInput").value;
-    let username = document.getElementById("userInput").value;
-    let description = document.getElementById("descriptionInput").value;
+    let url = escapeHTML(document.getElementById("urlInput").value);
+    let username = escapeHTML(document.getElementById("userInput").value);
+    let description = escapeHTML(document.getElementById("descriptionInput").value);
 
     try{
         await fetchJSON(`api/${apiVersion}/posts`, {

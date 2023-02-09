@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     req.models = models;
     next();
-})
+});
 
 app.use('/api/v1', apiRouter);
 app.use('/api/v2', apiRouter2);
