@@ -8,7 +8,7 @@ router.post('/', async (req, res, next) => {
         let date = new Date();
         const newPost = new req.models.Post({
           url: req.body.url,
-          username: req.body.username,
+          username: req.session.account.username,
           description: req.body.description,
           created_date: date
         });
