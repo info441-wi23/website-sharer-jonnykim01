@@ -2,16 +2,16 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import sessions from 'express-session'
-import msIdExpress from 'microsoft-identity-express'
+import sessions from 'express-session';
+import msIdExpress from 'microsoft-identity-express';
 const appSettings = {
     appCredentials: {
         clientId:  "29dde687-a5df-431b-a833-a4507e90dd0b",
         tenantId:  "f6b6dd5b-f02f-441a-99a0-162ac5060bd2",
-        clientSecret:  "1407b90a-9b73-4e85-8bd3-c81630125c73"
+        clientSecret:  "RcG8Q~nzbcLdzmBr4G~mon9xTRRckwXE~LzOQcY5"
     },
     authRoutes: {
-        redirect: "https://website-sharer-jonnykim01.azurewebsites.net/redirect", //note: you can explicitly make this "localhost:3000/redirect" or "examplesite.me/redirect"
+        redirect: "http://localhost:3000/redirect",//"https://website-sharer-jonnykim01.azurewebsites.net/redirect", //note: you can explicitly make this "localhost:3000/redirect" or "examplesite.me/redirect"
         error: "/error", // the wrapper will redirect to this route in case of any error.
         unauthorized: "/unauthorized" // the wrapper will redirect to this route in case of unauthorized access attempt.
     }
@@ -35,8 +35,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(sessions({
+    secret: "This is a secret key! asdasdasds asdttytfhgfh44332",
+    saveUninitialized: true,
+    cookie: {},
+    resave: false
+}));
 
 const msid = new msIdExpress.WebAppAuthClientBuilder(appSettings).build();
+app.use(msid.initialize());
 
 app.use((req, res, next) => {
     req.models = models;
