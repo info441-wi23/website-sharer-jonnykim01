@@ -4,24 +4,27 @@ var router = express.Router();
 import getURLPreview from '../utils/urlPreviews.js';
 
 router.post('/', async (req, res, next) => {
-    try {
-        let date = new Date();
-        const newPost = new req.models.Post({
-          url: req.body.url,
-          username: req.body.username,
-          description: req.body.description,
-          created_date: date
-        });
+    if (req.session.isAuthenticated) {
+        try {
+            let date = new Date();
+            const newPost = new req.models.Post({
+              url: req.body.url,
+              username: req.session.account.username,
+              description: req.body.description,
+              created_date: date
+            });
 
-        await newPost.save();
+            await newPost.save();
 
 
-        res.type('json');
-        res.send({'status': 'success'});
-    } catch(error) {
-        console.log("Error saving user: ", error);
-        console.log("Error saving posts: ", error);
-        res.status(500).json({"status": "error", "error": error});
+            res.json({'status': 'success'});
+        } catch(error) {
+            console.log("Error saving user: ", error);
+            console.log("Error saving posts: ", error);
+            res.status(500).json({"status": "error", "error": error});
+        }
+    } else {
+        res.json({status: "error", error: "not logged in"});
     }
 });
 

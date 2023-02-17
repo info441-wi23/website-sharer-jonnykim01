@@ -6,10 +6,10 @@ import sessions from 'express-session'
 import msIdExpress from 'microsoft-identity-express'
 const appSettings = {
     appCredentials: {
-        clientId:  "Client ID HERE",
-        tenantId:  "Tenant ID (directory Id) here",
-        clientSecret:  "Client secret here"
-    },	
+        clientId:  "29dde687-a5df-431b-a833-a4507e90dd0b",
+        tenantId:  "f6b6dd5b-f02f-441a-99a0-162ac5060bd2",
+        clientSecret:  "1407b90a-9b73-4e85-8bd3-c81630125c73"
+    },
     authRoutes: {
         redirect: "https://website-sharer-jonnykim01.azurewebsites.net/redirect", //note: you can explicitly make this "localhost:3000/redirect" or "examplesite.me/redirect"
         error: "/error", // the wrapper will redirect to this route in case of any error.
@@ -19,6 +19,7 @@ const appSettings = {
 
 import apiRouter from './routes/api/v1/apiv1.js';
 import apiRouter2 from './routes/api/v2/apiv2.js';
+import apiRouter3 from './routes/api/v3/apiv3.js';
 import models from './models.js';
 
 import { fileURLToPath } from 'url';
@@ -35,6 +36,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const msid = new msIdExpress.WebAppAuthClientBuilder(appSettings).build();
+
 app.use((req, res, next) => {
     req.models = models;
     next();
@@ -42,6 +45,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1', apiRouter);
 app.use('/api/v2', apiRouter2);
+app.use('/api/v3', apiRouter3);
 
 app.get('/signin',
     msid.signIn({postLoginRedirect: '/'})
