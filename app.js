@@ -63,11 +63,11 @@ app.get('/signout',
 );
 
 app.get('/error', (req, res) => {
-    res.status(500).send("Error: Server error")
+    res.status(500).send("Error: Server error");
 });
 
 app.get('/unauthorized', (req, res) => {
-    res.status(401).send("Error: Unauthorized")
+    res.status(401).send("Error: Unauthorized");
 });
 
 export default app;
