@@ -8,13 +8,13 @@ router.post('/', async (req, res, next) => {
         let date = new Date();
         const newPost = new req.models.Post({
           url: req.body.url,
-          username: req.session.account.username,
+          username: req.body.username,
           description: req.body.description,
           created_date: date
         });
-    
+
         await newPost.save();
-    
+
 
         res.type('json');
         res.send({'status': 'success'});
